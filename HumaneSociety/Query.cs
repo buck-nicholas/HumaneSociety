@@ -10,11 +10,17 @@ namespace HumaneSociety
     {
         public static Client GetClient(string username, string password)
         {
-
+            HumaneSocietyDataContext placeholder = new HumaneSocietyDataContext();
+            var someVar =
+                from x in placeholder.Clients
+                where x.UserName == username && x.Password == password
+                select x;
+            someVar.ToList();
+            return (Client)someVar;
         }
         public static List<Adoption> GetUserAdoptionStatus(Client client)
         {
-
+            
         }
         public static Animal GetAnimalByID(int iD)
         {
