@@ -8,55 +8,55 @@ namespace HumaneSociety
 {
     public static class Query
     {
-        public static void GetClient(string username, string password)
+        public static Client GetClient(string username, string password)
         {
 
         }
-        public static void GetUserAdoptionStatus(client)
+        public static List<Adoption> GetUserAdoptionStatus(Client client)
         {
 
         }
-        public static void GetAnimalByID(iD)
+        public static Animal GetAnimalByID(int iD)
         {
 
         }
-        public static void Adopt(animal, client)
+        public static void Adopt(Animal animal, Client client)
         {
 
         }
-        public static void RetrieveClients()
+        public static Client RetrieveClients()
         {
 
         }
-        public static void GetStates()
+        public static USState GetStates()
         {
 
         }
-        public static void AddNewClient(firstName, lastName, username, password, email, streetAddress, zipCode, state)
+        public static void AddNewClient(string firstName, string lastName, string username, string password, string email, string streetAddress, int zipCode, int state)
         {
 
         }
-        public static void updateClient(client)
+        public static void updateClient(Client client)
         {
 
         }
-        public static void UpdateUsername(client)
+        public static void UpdateUsername(Client client)
         {
 
         }
-        public static void UpdateEmail(client)
+        public static void UpdateEmail(Client client)
         {
 
         }
-        public static void UpdateAddress(client)
+        public static void UpdateAddress(Client client)
         {
 
         }
-        public static void UpdateFirstName(client)
+        public static void UpdateFirstName(Client client)
         {
 
         }
-        public static void UpdateLastName(client)
+        public static void UpdateLastName(Client client)
         {
 
         }
