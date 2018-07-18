@@ -19,12 +19,12 @@ namespace HumaneSociety
             requiredData.ToList();
             return (Client)requiredData;
         }
-        public static IQueryable<string> GetUserAdoptionStatus(Client client)
+        public static IQueryable<Adoption> GetUserAdoptionStatus(Client client)
         {
             var requiredData =
                 from x in database.Adoptions
-                where x.ClientId == client.ClientId
-                select x.ApprovalStatus;
+                where x.ClientId == client.ClientId && x.ApprovalStatus == "Pending"
+                select x;
             return requiredData;
         }
         public static IQueryable<Adoption> GetPendingAdoptions()
