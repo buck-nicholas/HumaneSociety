@@ -100,7 +100,7 @@ namespace HumaneSociety
         }
         public static Client RetrieveClients()
         {
-
+            
         }
         public static USState GetStates()
         {
