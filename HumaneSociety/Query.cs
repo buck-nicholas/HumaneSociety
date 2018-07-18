@@ -72,9 +72,10 @@ namespace HumaneSociety
             }
 
         }
-        public static Animal AddAnimal(Animal animal)
+        public static void AddAnimal(Animal animal)
         {
-
+            database.Animals.InsertOnSubmit(animal);
+            database.SubmitChanges();
         }
         public static Species GetSpecies()
         {
