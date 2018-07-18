@@ -19,9 +19,13 @@ namespace HumaneSociety
             requiredData.ToList();
             return (Client)requiredData;
         }
-        public static List<Adoption> GetUserAdoptionStatus(Client client)
+        public static IQueryable<string> GetUserAdoptionStatus(Client client)
         {
-            
+            var requiredData =
+                from x in database.Adoptions
+                where x.ClientId == client.ClientId
+                select x.ApprovalStatus;
+            return requiredData;
         }
         public static Animal GetAnimalByID(int iD)
         {
@@ -80,3 +84,5 @@ namespace HumaneSociety
         {
 
         }
+    }
+}
