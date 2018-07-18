@@ -76,7 +76,7 @@ namespace HumaneSociety
         {
 
         }
-        public static void updateClient(Client client)
+        public static void UpdateClient(Client client)
         {
 
         }
@@ -104,9 +104,13 @@ namespace HumaneSociety
         {
 
         }
-        public static object GetShots(Animal animal)
+        public static IQueryable<AnimalShot> GetShots(Animal animal)
         {
-
+            var requiredData =
+                from x in database.AnimalShots
+                where x.AnimalId == animal.AnimalId
+                select x;
+            return requiredData;
         }
         public static object UpdateShot(string, Animal animal)
         {
