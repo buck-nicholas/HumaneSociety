@@ -22,7 +22,31 @@ namespace HumaneSociety
         {
             
         }
+        public static List<Adoption> GetPendingAdoptions()
+        {
+
+        }
+        public static bool UpdateAdoption(bool x , Adoption adoption)
+        {
+
+        }
         public static Animal GetAnimalByID(int iD)
+        {
+
+        }
+        public static Animal RemoveAnimal(Animal animal)
+        {
+
+        }
+        public static Animal AddAnimal(Animal animal)
+        {
+
+        }
+        public static Species GetSpecies()
+        {
+
+        }
+        public static DietPlan GetDietPlan()
         {
 
         }
@@ -63,6 +87,34 @@ namespace HumaneSociety
 
         }
         public static void UpdateLastName(Client client)
+        {
+
+        }
+        public static object EnterUpdate(Animal animal, Dictionary<int, string>)
+        {
+
+        }
+        public static object GetShots(Animal animal)
+        {
+
+        }
+        public static object UpdateShot(string, Animal animal)
+        {
+
+        }
+        public static Employee EmployeeLogin(string username, string password)
+        {
+
+        }
+        public static Employee RetrieveEmployeeUser(string email, int employeeNumber)
+        {
+
+        }
+        public static void AddUsernameAndPassword(Employee employee)
+        {
+
+        }
+        public static bool CheckEmployeeUserNameExist(string username)
         {
 
         }
