@@ -70,7 +70,6 @@ namespace HumaneSociety
                 database.Animals.DeleteOnSubmit(requiredData);
                 database.SubmitChanges();
             }
-
         }
         public static void AddAnimal(Animal animal)
         {
@@ -86,11 +85,18 @@ namespace HumaneSociety
         }
         public static DietPlan GetDietPlan()
         {
-
+            var requiredData =
+                from x in database.DietPlans
+                select x;
+            return (DietPlan)requiredData;
         }
         public static void Adopt(Animal animal, Client client)
         {
-
+            Adoption newAdd = new Adoption();
+            newAdd.Client = client;
+            newAdd.Animal = animal;
+            database.Adoptions.InsertOnSubmit(newAdd);
+            database.SubmitChanges();
         }
         public static Client RetrieveClients()
         {
@@ -102,31 +108,73 @@ namespace HumaneSociety
         }
         public static void AddNewClient(string firstName, string lastName, string username, string password, string email, string streetAddress, int zipCode, int state)
         {
-
+            Client newClient = new Client
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                UserName = username,
+                Password = password,
+                Email = email
+            };
+            newClient.Address.USState.USStateId = state;
+            newClient.Address.Zipcode = zipCode;
+            newClient.Address.AddressLine1 = streetAddress;
+            database.Clients.InsertOnSubmit(newClient);
+            database.SubmitChanges();
         }
         public static void UpdateClient(Client client)
         {
-
+            var requiredData =
+                (from x in database.Clients
+                 where x.ClientId == client.ClientId
+                 select x).First();
+            requiredData = client;
+            database.SubmitChanges();
         }
         public static void UpdateUsername(Client client)
         {
-
+            var requiredData =
+                   (from x in database.Clients
+                    where x.ClientId == client.ClientId
+                    select x).First();
+            requiredData.UserName = client.UserName;
+            database.SubmitChanges();
         }
         public static void UpdateEmail(Client client)
         {
-
+            var requiredData =
+                   (from x in database.Clients
+                    where x.ClientId == client.ClientId
+                    select x).First();
+            requiredData.Email = client.Email;
+            database.SubmitChanges();
         }
         public static void UpdateAddress(Client client)
         {
-
+            var requiredData =
+                  (from x in database.Clients
+                   where x.ClientId == client.ClientId
+                   select x).First();
+            requiredData.Address = client.Address;
+            database.SubmitChanges();
         }
         public static void UpdateFirstName(Client client)
         {
-
+            var requiredData =
+                   (from x in database.Clients
+                    where x.ClientId == client.ClientId
+                    select x).First();
+            requiredData.FirstName = client.FirstName;
+            database.SubmitChanges();
         }
         public static void UpdateLastName(Client client)
         {
-
+            var requiredData =
+                   (from x in database.Clients
+                    where x.ClientId == client.ClientId
+                    select x).First();
+            requiredData.LastName = client.LastName;
+            database.SubmitChanges();
         }
         public static object EnterUpdate(Animal animal, Dictionary<int, string>)
         {
@@ -154,7 +202,7 @@ namespace HumaneSociety
         }
         public static void AddUsernameAndPassword(Employee employee)
         {
-
+            
         }
         public static bool CheckEmployeeUserNameExist(string username)
         {
