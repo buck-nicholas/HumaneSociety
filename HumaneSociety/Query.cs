@@ -59,8 +59,17 @@ namespace HumaneSociety
             requiredData.ToList();
             return (Animal)requiredData;
         }
-        public static Animal RemoveAnimal(Animal animal)
+        public static void RemoveAnimal(Animal animal)
         {
+            var requiredData =
+                (from x in database.Animals
+                 where x.AnimalId == animal.AnimalId
+                 select x).First();
+            if(requiredData != null)
+            {
+                database.Animals.DeleteOnSubmit(requiredData);
+                database.SubmitChanges();
+            }
 
         }
         public static Animal AddAnimal(Animal animal)
