@@ -1,15 +1,13 @@
-﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace HumaneSociety
 {
     public static class Query
     {
         public static HumaneSocietyDataContext database = new HumaneSocietyDataContext();
-
         public static Client GetClient(string username, string password)
         {
             var requiredData =
@@ -35,7 +33,7 @@ namespace HumaneSociety
                 select x;
             return requiredData;
         }
-        public static void UpdateAdoption(bool x , Adoption adoption)
+        public static void UpdateAdoption(bool x, Adoption adoption)
         {
             var requiredData =
                 (from y in database.Adoptions
@@ -65,7 +63,7 @@ namespace HumaneSociety
                 (from x in database.Animals
                  where x.AnimalId == animal.AnimalId
                  select x).First();
-            if(requiredData != null)
+            if (requiredData != null)
             {
                 database.Animals.DeleteOnSubmit(requiredData);
                 database.SubmitChanges();
@@ -100,11 +98,17 @@ namespace HumaneSociety
         }
         public static Client RetrieveClients()
         {
-            
+            var requiredData =
+               from x in database.Clients
+               select x;
+            return (Client)requiredData;
         }
         public static USState GetStates()
         {
-
+            var requiredData =
+               from x in database.USStates
+               select x;
+            return (USState)requiredData;
         }
         public static void AddNewClient(string firstName, string lastName, string username, string password, string email, string streetAddress, int zipCode, int state)
         {
@@ -176,9 +180,13 @@ namespace HumaneSociety
             requiredData.LastName = client.LastName;
             database.SubmitChanges();
         }
-        public static object EnterUpdate(Animal animal, Dictionary<int, string>)
+        public static IQueryable<Animal> EnterUpdate(Animal animal, Dictionary<int, string>)
         {
-
+            var requiredData =
+                from x in database.Animals
+                where x.AnimalId == animal.AnimalId
+                select x;
+            return requiredData;
         }
         public static IQueryable<AnimalShot> GetShots(Animal animal)
         {
@@ -190,32 +198,71 @@ namespace HumaneSociety
         }
         public static object UpdateShot(string, Animal animal)
         {
-
+            var requiredData =
+               from x in database.Animals
+               where x.AnimalId == animal.AnimalId
+               select x;
+            return requiredData;
         }
         public static Employee EmployeeLogin(string username, string password)
         {
-
+            var requiredData =
+               from x in database.Employees
+               where x.UserName == username || x.Password == password
+               select x;
+            return (Employee)requiredData;
         }
         public static Employee RetrieveEmployeeUser(string email, int employeeNumber)
         {
-
+            var requiredData =
+            from x in database.Employees
+            where x.Email == email || x.EmployeeNumber == employeeNumber
+            select x;
+            return (Employee)requiredData;
         }
         public static void AddUsernameAndPassword(Employee employee)
         {
-            
+            var requiredData =
+                (from x in database.Employees
+                 where x.EmployeeId == employee.EmployeeId
+                 select x).First();
+            if (requiredData != null)
+            {
+                requiredData.UserName = employee.UserName;
+                requiredData.Password = employee.Password;
+                database.SubmitChanges();
+            }
         }
         public static bool CheckEmployeeUserNameExist(string username)
         {
-
+            try
+            {
+                var requiredData =
+                from x in database.Employees
+                where x.UserName.Contains(username)
+                select x;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
-
-        public static void RunEmployeeQueries(Employee employee, string message)
+        public static IQueryable<Employee> RunEmployeeQueries(Employee employee, string message)
         {
-
+            var requiredData =
+               from x in database.Employees
+               where x.EmployeeId == employee.EmployeeId
+               select x;
+            return requiredData;
         }
         public static Room GetRoom(int animalID)
         {
-
+            var requiredData =
+                from x in database.Rooms
+                where animalID == x.Animal.AnimalId
+                select x;
+            return (Room)requiredData;
         }
     }
 }
