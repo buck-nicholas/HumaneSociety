@@ -27,13 +27,28 @@ namespace HumaneSociety
                 select x.ApprovalStatus;
             return requiredData;
         }
-        public static List<Adoption> GetPendingAdoptions()
+        public static IQueryable<Adoption> GetPendingAdoptions()
         {
-
+            var requiredData =
+                from x in database.Adoptions
+                where x.ApprovalStatus == "Pending"
+                select x;
+            return requiredData;
         }
-        public static bool UpdateAdoption(bool x , Adoption adoption)
+        public static void UpdateAdoption(bool x , Adoption adoption)
         {
-
+            var requiredData =
+                (from y in database.Adoptions
+                 where y.AdoptionId == adoption.AdoptionId
+                 select y).First();
+            if (x)
+            {
+                requiredData.ApprovalStatus = "Approved";
+            }
+            else
+            {
+                requiredData.ApprovalStatus = "Denied";
+            }
         }
         public static Animal GetAnimalByID(int iD)
         {
@@ -54,7 +69,10 @@ namespace HumaneSociety
         }
         public static Species GetSpecies()
         {
-
+            var requiredData =
+                from x in database.Species
+                select x;
+            return (Species)requiredData;
         }
         public static DietPlan GetDietPlan()
         {
