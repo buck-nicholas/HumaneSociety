@@ -196,13 +196,13 @@ namespace HumaneSociety
                 select x;
             return requiredData;
         }
-        public static object UpdateShot(string, Animal animal)
+        public static void UpdateShot(string newShot, Animal animal) // unaccounted for error
         {
-            var requiredData =
-               from x in database.Animals
-               where x.AnimalId == animal.AnimalId
-               select x;
-            return requiredData;
+            AnimalShot newAnimalShot = new AnimalShot();
+            newAnimalShot.AnimalId = animal.AnimalId;
+            newAnimalShot.Shot.Name = newShot;
+            database.AnimalShots.InsertOnSubmit(newAnimalShot);
+            database.SubmitChanges();
         }
         public static Employee EmployeeLogin(string username, string password)
         {
