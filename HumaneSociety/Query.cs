@@ -8,15 +8,16 @@ namespace HumaneSociety
 {
     public static class Query
     {
+        public static HumaneSocietyDataContext database = new HumaneSocietyDataContext();
+
         public static Client GetClient(string username, string password)
         {
-            HumaneSocietyDataContext placeholder = new HumaneSocietyDataContext();
-            var someVar =
-                from x in placeholder.Clients
+            var requiredData =
+                from x in database.Clients
                 where x.UserName == username && x.Password == password
                 select x;
-            someVar.ToList();
-            return (Client)someVar;
+            requiredData.ToList();
+            return (Client)requiredData;
         }
         public static List<Adoption> GetUserAdoptionStatus(Client client)
         {
@@ -32,7 +33,12 @@ namespace HumaneSociety
         }
         public static Animal GetAnimalByID(int iD)
         {
-
+            var requiredData =
+                from x in database.Animals
+                where x.AnimalId == iD
+                select x;
+            requiredData.ToList();
+            return (Animal)requiredData;
         }
         public static Animal RemoveAnimal(Animal animal)
         {
@@ -115,6 +121,15 @@ namespace HumaneSociety
 
         }
         public static bool CheckEmployeeUserNameExist(string username)
+        {
+
+        }
+
+        public static void RunEmployeeQueries(Employee employee, string message)
+        {
+
+        }
+        public static Room GetRoom(int animalID)
         {
 
         }
