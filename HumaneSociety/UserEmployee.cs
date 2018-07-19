@@ -9,6 +9,7 @@ namespace HumaneSociety
     class UserEmployee : User
     {
         Employee employee;
+        double cashRegister = 0;
         
         public override void LogIn()
         {
@@ -87,6 +88,7 @@ namespace HumaneSociety
             if ((bool)UserInterface.GetBitData())
             {
                 Query.UpdateAdoption(true, adoption);
+                cashRegister += Query.ChargeAdoptionFee(adoption);
             }
             else
             {

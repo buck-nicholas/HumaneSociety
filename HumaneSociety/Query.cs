@@ -330,5 +330,20 @@ namespace HumaneSociety
                 newAnimal.AdoptionStatus = csvOutputData[i][10];
             }
         }
+        public static double ChargeAdoptionFee(Adoption adoption)
+        {
+            if(adoption.AdoptionFee != null)
+            {
+                int? payment = adoption.AdoptionFee;
+                double paymentConverted = Convert.ToDouble(payment);
+                adoption.PaymentCollected = true;
+                return paymentConverted;
+            }
+            else
+            {
+                adoption.PaymentCollected = true;
+                return 0;
+            }
+        }
     }
 }

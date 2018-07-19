@@ -142,7 +142,6 @@ namespace HumaneSociety
         private string[][] LoadAnimalCSV() // CSV To Program
         {
             string path = @"animals.csv";
-            string[] csvDataLines = File.ReadAllLines(path);
             var output = File.ReadAllLines(path).Select(x => x.Split(new[] { ',', '"', ' ' }, StringSplitOptions.RemoveEmptyEntries)).AsQueryable<string[]>().ToArray();
             return output;
         }
