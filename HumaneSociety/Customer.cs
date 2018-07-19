@@ -155,14 +155,10 @@ namespace HumaneSociety
         }
         public static string GetUserName()
         {
-            // Placed here to resolve error line 165
-            HumaneSocietyDataContext database = new HumaneSocietyDataContext();
-            // 
             UserInterface.DisplayUserOptions("Please enter a username");
             string username = UserInterface.GetUserInput();
             var clients = Query.RetrieveClients();
-            // 165 source code altered to align with fix on 159
-            var clientUsernames = from client in database.Clients select client.UserName;
+            var clientUsernames = from client in clients select client.UserName;
             if (CheckForForValue(clientUsernames.ToList(), username))
             {
                 Console.Clear();

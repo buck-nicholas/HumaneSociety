@@ -126,15 +126,14 @@ namespace HumaneSociety
         }
         public static void AddNewClient(string firstName, string lastName, string username, string password, string email, string streetAddress, int zipCode, int state)
         {
-            Client newClient = new Client
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                UserName = username,
-                Password = password,
-                Email = email
-            };
-            newClient.Address.USState.USStateId = state;
+            Client newClient = new Client();
+            newClient.FirstName = firstName;
+            newClient.LastName = lastName;
+            newClient.UserName = username;
+            newClient.Password = password;
+            newClient.Email = email;
+            //newClient.Address.USStateId = state;
+            //newClient.Address.USState.USStateId = state;
             newClient.Address.Zipcode = zipCode;
             newClient.Address.AddressLine1 = streetAddress;
             database.Clients.InsertOnSubmit(newClient);
@@ -194,12 +193,56 @@ namespace HumaneSociety
             requiredData.LastName = client.LastName;
             database.SubmitChanges();
         }
-        public static void EnterUpdate(Animal animal, Dictionary<int, string> someDIctionary)
+        public static void EnterUpdate(Animal animal, Dictionary<int, string> dictionayrOfChanges)
         {
             var requiredData =
-                from x in database.Animals
-                where x.AnimalId == animal.AnimalId
-                select x;
+                (from x in database.Animals
+                 where x.AnimalId == animal.AnimalId
+                 select x).First();
+            foreach(KeyValuePair<int, string> item in dictionayrOfChanges)
+            {
+                switch (item.Key)
+                {
+                    case '1':
+                        requiredData.Species.Name = item.Value;
+                        break;
+                    case '2':
+                        requiredData.Species.Name = item.Value;
+                        break;
+                    case '3':
+                        requiredData.Name = item.Value;
+                        break;
+                    case '4':
+                        requiredData.Age = int.Parse(item.Value);
+                        break;
+                    case '5':
+                        requiredData.Demeanor = item.Value;
+                        break;
+                    case '6':
+                        if (item.Value == "true")
+                        {
+                            requiredData.KidFriendly = true;
+                        }
+                        else
+                        {
+                            requiredData.KidFriendly = false;
+                        }
+                        break;
+                    case '7':
+                        if (item.Value == "true")
+                        {
+                            requiredData.PetFriendly = true;
+                        }
+                        else
+                        {
+                            requiredData.PetFriendly = false;
+                        }
+                        break;
+                    case '8':
+                        requiredData.Weight = int.Parse(item.Value);
+                        break;
+                }
+            }
         }
         public static IQueryable<AnimalShot> GetShots(Animal animal)
         {

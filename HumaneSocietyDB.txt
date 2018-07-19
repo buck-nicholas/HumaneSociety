@@ -2,10 +2,10 @@ INSERT INTO Species
 	(Name)
 VALUES
 	('Cats'),
-	("Dogs"),
-	("Ferrets"),
-	("Gerbils"),
-	("Rabbits");
+	('Dogs'),
+	('Ferrets'),
+	('Gerbils'),
+	('Rabbits');
 
 INSERT INTO DietPlans
 	(Name, FoodType, FoodAmountInCups)
@@ -17,7 +17,7 @@ VALUES
 	('Bunny','Carrot',3);
 
 INSERT INTO Animals
-	(Category)
+	(Name, Weight, Age, Demeanor, KidFriendly, PetFriendly, Gender, AdoptionStatus)
 VALUES
 	('Sally',40,1,'neutral','TRUE','TRUE','Female','Pending'),
 	('Foxy',30,2,'passive','TRUE','TRUE','Female','Pending'),
