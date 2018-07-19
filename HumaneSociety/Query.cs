@@ -75,12 +75,25 @@ namespace HumaneSociety
             database.Animals.InsertOnSubmit(animal);
             database.SubmitChanges();
         }
-        public static Species GetSpecies()
+        public static Species GetSpecies(string speciesName)
         {
-            var requiredData =
-                from x in database.Species
-                select x;
-            return (Species)requiredData;
+            
+            try
+            {
+                var requiredData =
+                (from x in database.Species
+                 where x.Name == speciesName
+                 select x).First();
+                return requiredData;
+            }
+            catch
+            {
+                Species newSpecies = new Species();
+                newSpecies.Name = speciesName;
+                database.Species.InsertOnSubmit(newSpecies);
+                database.SubmitChanges();
+                return newSpecies;
+            }
         }
         public static DietPlan GetDietPlan()
         {

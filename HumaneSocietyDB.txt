@@ -1,0 +1,53 @@
+INSERT INTO Species
+	(Name)
+VALUES
+	('Cats'),
+	("Dogs"),
+	("Ferrets"),
+	("Gerbils"),
+	("Rabbits");
+
+INSERT INTO DietPlans
+	(Name, FoodType, FoodAmountInCups)
+VALUES
+	('Light','Kibble',1),
+	('Regular','Kibble',2),
+	('Heavy','Kibble',3),
+	('Feline','Can',1),
+	('Bunny','Carrot',3);
+
+INSERT INTO Animals
+	(Category)
+VALUES
+	('Sally',40,1,'neutral','TRUE','TRUE','Female','Pending'),
+	('Foxy',30,2,'passive','TRUE','TRUE','Female','Pending'),
+	('Timmy',50,3,'passive','TRUE','TRUE','Male','Pending'),
+	('Tommy',35,1,'aggressive','TRUE','TRUE','Male','Pending'),
+	('Brownie',22,3,'passive','TRUE','TRUE','Female','Pending');
+
+INSERT INTO Rooms
+	(AnimalId)
+VALUES
+	(1),
+	(2),
+	(3),
+	(4),
+	(5),
+	(6),
+	(7),
+	(8),
+	(9),
+	(10);
+
+INSERT INTO Shots
+	(Name)
+VALUES
+	('Booster'),
+	('Rabies'),
+	('DHPP'),
+	('Bordetella'),
+	('Microchip');
+
+ALTER TABLE Animals
+	Add Category varchar(50) NULL;
+
