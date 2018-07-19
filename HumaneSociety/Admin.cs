@@ -26,7 +26,7 @@ namespace HumaneSociety
         protected override void RunUserMenus()
         {
             Console.Clear();
-            List<string> options = new List<string>() { "Admin log in successful.", "What would you like to do?", "1. Create new employee", "2. Delete employee", "3. Read employee info ", "4. Update emplyee info", "(type 1, 2, 3, 4,  create, read, update, or delete)" };
+            List<string> options = new List<string>() { "Admin log in successful.", "What would you like to do?", "1. Create new employee", "2. Delete employee", "3. Read employee info ", "4. Update emplyee info", "5. Import CSV","(type 1, 2, 3, 4, 5,  create, read, update, delete, or import.)" };
             UserInterface.DisplayUserOptions(options);
             string input = UserInterface.GetUserInput();
             RunInput(input);
@@ -53,6 +53,11 @@ namespace HumaneSociety
                 UpdateEmployee();
                 RunUserMenus();
             }
+            else if (input == "5")
+            {
+                AnimalCSVToDatabase();
+                RunUserMenus();
+            }
             else
             {
                 UserInterface.DisplayUserOptions("Input not recognized please try again or type exit");
@@ -65,7 +70,7 @@ namespace HumaneSociety
             Employee employee = new Employee();
             employee.FirstName = UserInterface.GetStringData("first name", "the employee's");
             employee.LastName = UserInterface.GetStringData("last name", "the employee's");
-            employee.EmployeeId = int.Parse(UserInterface.GetStringData("employee number", "the employee's"));
+            employee.EmployeeNumber = int.Parse(UserInterface.GetStringData("employee number", "the employee's"));
             employee.Email = UserInterface.GetStringData("email", "the employee's");
             try
             {

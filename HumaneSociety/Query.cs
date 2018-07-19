@@ -12,11 +12,11 @@ namespace HumaneSociety
         public static Client GetClient(string username, string password)
         {
             var requiredData =
-                from x in database.Clients
+                (from x in database.Clients
                 where x.UserName == username && x.Password == password
-                select x;
-            requiredData.ToList();
-            return (Client)requiredData;
+                select x).First();
+            //requiredData.ToList();
+            return requiredData;
         }
         public static IQueryable<Adoption> GetUserAdoptionStatus(Client client)
         {
@@ -95,12 +95,22 @@ namespace HumaneSociety
                 return newSpecies;
             }
         }
-        public static DietPlan GetDietPlan()
+        public static DietPlan GetDietPlan(string dietPlanName)
         {
-            var requiredData =
-                from x in database.DietPlans
-                select x;
-            return (DietPlan)requiredData;
+            try
+            {
+                var requiredData =
+                (from x in database.DietPlans
+                 where x.Name == dietPlanName
+                 select x).First();
+                return requiredData;
+            }
+            catch
+            {
+                DietPlan newPlan = new DietPlan();
+                newPlan.Name = dietPlanName;
+                return newPlan;
+            }
         }
         public static void Adopt(Animal animal, Client client)
         {
@@ -134,8 +144,15 @@ namespace HumaneSociety
             newClient.Email = email;
             //newClient.Address.USStateId = state;
             //newClient.Address.USState.USStateId = state;
-            newClient.Address.Zipcode = zipCode;
-            newClient.Address.AddressLine1 = streetAddress;
+            //newClient.Address.Zipcode = zipCode;
+            //newClient.Address.AddressLine1 = streetAddress;
+            Address newAddress = new Address();
+            newAddress.AddressLine1 = streetAddress;
+            newAddress.USStateId = state;
+            newAddress.Zipcode = zipCode;
+            database.Addresses.InsertOnSubmit(newAddress);
+            database.SubmitChanges();
+            newClient.Address = newAddress;
             database.Clients.InsertOnSubmit(newClient);
             database.SubmitChanges();
         }
@@ -263,18 +280,18 @@ namespace HumaneSociety
         public static Employee EmployeeLogin(string username, string password)
         {
             var requiredData =
-               from x in database.Employees
-               where x.UserName == username || x.Password == password
-               select x;
-            return (Employee)requiredData;
+               (from x in database.Employees
+               where x.UserName == username && x.Password == password
+               select x).First();
+            return requiredData;
         }
         public static Employee RetrieveEmployeeUser(string email, int employeeNumber)
         {
             var requiredData =
-            from x in database.Employees
-            where x.Email == email || x.EmployeeNumber == employeeNumber
-            select x;
-            return (Employee)requiredData;
+            (from x in database.Employees
+             where x.Email == email || x.EmployeeNumber == employeeNumber
+             select x).First();
+            return requiredData;
         }
         public static void AddUsernameAndPassword(Employee employee)
         {
@@ -294,15 +311,24 @@ namespace HumaneSociety
             try
             {
                 var requiredData =
-                from x in database.Employees
-                where x.UserName.Contains(username)
-                select x;
-                return true;
+                (from x in database.Employees
+                 where x.UserName == username
+                 select x).First();
+
+                if (requiredData.UserName == username)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch
             {
                 return false;
             }
+            
         }
         public static void RunEmployeeQueries(Employee employee, string message)
         {
@@ -311,15 +337,19 @@ namespace HumaneSociety
             {
                 case "create":
                     Del create = new Del(CreateEmployee);
+                    create(employee);
                     break;
                 case "delete":
                     Del delete = new Del(DeleteEmployee);
+                    delete(employee);
                     break;
                 case "read":
                     Del read = new Del(ReadEmployee);
+                    read(employee);
                     break;
                 case "update":
                     Del update = new Del(UpdateEmployee);
+                    update(employee);
                     break;
                 default:
                     UserInterface.DisplayUserOptions("Input not recognized please try again or type exit");
@@ -347,20 +377,32 @@ namespace HumaneSociety
         public static void ReadEmployee(Employee employee)
         {
             var requiredData =
-               from x in database.Employees
-               where x.EmployeeId == employee.EmployeeId
-               select x;
-
+               (from x in database.Employees
+                where x.EmployeeNumber == employee.EmployeeNumber
+               select x).First();
+            Console.WriteLine(requiredData.FirstName);
+            Console.WriteLine(requiredData.LastName);
+            Console.WriteLine(requiredData.Email);
+            Console.ReadLine();
         }
         public static void UpdateEmployee(Employee employee)
         {
             var requiredData =
-                   (from x in database.Employees
-                    where x.EmployeeNumber == employee.EmployeeNumber
-                    select x).First();
+               (from x in database.Employees
+                where x.EmployeeNumber == employee.EmployeeNumber
+                select x).First();
             requiredData.FirstName = employee.FirstName;
             requiredData.LastName = employee.FirstName;
             requiredData.Email = employee.Email;
+            database.SubmitChanges();
+        }
+        public static void UpdateEmployeeUserName(Employee employee, string username)
+        {
+            var requiredData =
+               (from x in database.Employees
+                where x.EmployeeNumber == employee.EmployeeNumber
+                select x).First();
+            requiredData.UserName = username;
             database.SubmitChanges();
         }
         public static Room GetRoom(int animalID)
@@ -384,6 +426,8 @@ namespace HumaneSociety
                 newAnimal.KidFriendly = (int.Parse(csvOutputData[i][8]) == 1) ? true : false;
                 newAnimal.PetFriendly = (int.Parse(csvOutputData[i][9]) == 1) ? true : false;
                 newAnimal.AdoptionStatus = csvOutputData[i][10];
+                database.Animals.InsertOnSubmit(newAnimal);
+                database.SubmitChanges();
             }
         }
         public static double ChargeAdoptionFee(Adoption adoption)
