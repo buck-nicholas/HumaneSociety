@@ -7,6 +7,7 @@ namespace HumaneSociety
 {
     public static class Query
     {
+        public delegate void Del(Employee employee);
         public static HumaneSocietyDataContext database = new HumaneSocietyDataContext();
         public static Client GetClient(string username, string password)
         {
@@ -180,56 +181,12 @@ namespace HumaneSociety
             requiredData.LastName = client.LastName;
             database.SubmitChanges();
         }
-        public static void EnterUpdate(Animal animal, Dictionary<int, string> someDictionary)
+        public static void EnterUpdate(Animal animal, Dictionary<int, string> someDIctionary)
         {
             var requiredData =
-                (from x in database.Animals
-                 where x.AnimalId == animal.AnimalId
-                 select x).First();
-            foreach(KeyValuePair<int, string> item in someDictionary)
-            {
-                switch (item.Key)
-                {
-                    case '1':
-                        requiredData.Species.Name = item.Value;
-                        break;
-                    case '2':
-                        requiredData.Species.Name = item.Value; // requires adjustment
-                        break;
-                    case '3':
-                        requiredData.Name = item.Value;
-                        break;
-                    case '4':
-                        requiredData.Age = int.Parse(item.Value);
-                        break;
-                    case '5':
-                        requiredData.Demeanor = item.Value;
-                        break;
-                    case '6':
-                        if (item.Value == "true")
-                        {
-                            requiredData.KidFriendly = true;
-                        }
-                        else
-                        {
-                            requiredData.KidFriendly = false;
-                        }
-                        break;
-                    case '7':
-                        if (item.Value == "true")
-                        {
-                            requiredData.PetFriendly = true;
-                        }
-                        else
-                        {
-                            requiredData.PetFriendly = false;
-                        }
-                        break;
-                    case '8':
-                        requiredData.Weight = int.Parse(item.Value);
-                        break;
-                }
-            }
+                from x in database.Animals
+                where x.AnimalId == animal.AnimalId
+                select x;
         }
         public static IQueryable<AnimalShot> GetShots(Animal animal)
         {
@@ -291,13 +248,64 @@ namespace HumaneSociety
                 return false;
             }
         }
-        public static IQueryable<Employee> RunEmployeeQueries(Employee employee, string message)
+        public static void RunEmployeeQueries(Employee employee, string message)
+        {
+
+            switch (message)
+            {
+                case "create":
+                    Del create = new Del(CreateEmployee);
+                    break;
+                case "delete":
+                    Del delete = new Del(DeleteEmployee);
+                    break;
+                case "read":
+                    Del read = new Del(ReadEmployee);
+                    break;
+                case "update":
+                    Del update = new Del(UpdateEmployee);
+                    break;
+                default:
+                    UserInterface.DisplayUserOptions("Input not recognized please try again or type exit");
+                    break;
+            }
+
+        }
+        public static void CreateEmployee(Employee employee)
+        {
+            database.Employees.InsertOnSubmit(employee);
+            database.SubmitChanges();
+        }
+        public static void DeleteEmployee(Employee employee)
+        {
+            var requiredData =
+               (from x in database.Employees
+                where x.EmployeeNumber == employee.EmployeeNumber
+                select x).First();
+            if (requiredData != null)
+            {
+                database.Employees.DeleteOnSubmit(requiredData);
+                database.SubmitChanges();
+            }
+        }
+        public static void ReadEmployee(Employee employee)
         {
             var requiredData =
                from x in database.Employees
                where x.EmployeeId == employee.EmployeeId
                select x;
-            return requiredData;
+
+        }
+        public static void UpdateEmployee(Employee employee)
+        {
+            var requiredData =
+                   (from x in database.Employees
+                    where x.EmployeeNumber == employee.EmployeeNumber
+                    select x).First();
+            requiredData.FirstName = employee.FirstName;
+            requiredData.LastName = employee.FirstName;
+            requiredData.Email = employee.Email;
+            database.SubmitChanges();
         }
         public static Room GetRoom(int animalID)
         {
@@ -306,6 +314,21 @@ namespace HumaneSociety
                 where animalID == x.Animal.AnimalId
                 select x;
             return (Room)requiredData;
+        }
+        public static void ImportCSVDataToDatabase(string[][] csvOutputData) // CSV Data to New Record
+        {
+            for (int i = 0; i < csvOutputData.Count(); i++)
+            {
+                Animal newAnimal = new Animal();
+                newAnimal.AnimalId = int.Parse(csvOutputData[i][0]);
+                newAnimal.Name = csvOutputData[i][1];
+                newAnimal.Weight = int.Parse(csvOutputData[i][3]);
+                newAnimal.Age = int.Parse(csvOutputData[i][4]);
+                newAnimal.Demeanor = csvOutputData[i][7];
+                newAnimal.KidFriendly = (int.Parse(csvOutputData[i][8]) == 1) ? true : false;
+                newAnimal.PetFriendly = (int.Parse(csvOutputData[i][9]) == 1) ? true : false;
+                newAnimal.AdoptionStatus = csvOutputData[i][10];
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,6 @@ namespace HumaneSociety
 {
     class Admin : User
     {
-
-
-
-
         public override void LogIn()
         {
             UserInterface.DisplayUserOptions("What is your password?");
@@ -136,6 +133,18 @@ namespace HumaneSociety
                 UserInterface.DisplayUserOptions("Employee addition unsuccessful please try again or type exit;");
                 return;
             }
+        }
+        private void AnimalCSVToDatabase() // CSV Load Controller
+        {
+            var output = LoadAnimalCSV();
+            Query.ImportCSVDataToDatabase(output);
+        }
+        private string[][] LoadAnimalCSV() // CSV To Program
+        {
+            string path = @"animals.csv";
+            string[] csvDataLines = File.ReadAllLines(path);
+            var output = File.ReadAllLines(path).Select(x => x.Split(new[] { ',', '"', ' ' }, StringSplitOptions.RemoveEmptyEntries)).AsQueryable<string[]>().ToArray();
+            return output;
         }
 
     }
