@@ -51,3 +51,26 @@ VALUES
 ALTER TABLE Animals
 	Add Category varchar(50) NULL;
 
+ALTER TABLE Rooms
+	ADD RoomNumber int
+
+SET RoomNumber = 1
+WHERE RoomId = 6
+SET RoomNumber = 2
+WHERE RoomId = 7
+SET RoomNumber = 3
+WHERE RoomId = 8
+SET RoomNumber = 4
+WHERE RoomId = 9
+SET RoomNumber = 5
+WHERE RoomId = 10
+SET RoomNumber = 6
+WHERE RoomId = 11
+SET RoomNumber = 7
+WHERE RoomId = 12
+SET RoomNumber = 8
+WHERE RoomId = 13
+SET RoomNumber = 9
+WHERE RoomId = 14
+SET RoomNumber = 10
+WHERE RoomId = 15
