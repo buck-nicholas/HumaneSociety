@@ -16,7 +16,6 @@ namespace HumaneSociety
                 (from x in database.Clients
                 where x.UserName == username && x.Password == password
                 select x).First();
-            //requiredData.ToList();
             return requiredData;
         }
         public static IQueryable<Adoption> GetUserAdoptionStatus(Client client)
@@ -294,7 +293,7 @@ namespace HumaneSociety
                 select x;
             return requiredData;
         }
-        public static void UpdateShot(string newShot, Animal animal) // unaccounted for error
+        public static void UpdateShot(string newShot, Animal animal)
         {
             var requiredData =
                 (from x in database.Shots
