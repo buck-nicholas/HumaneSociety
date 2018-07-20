@@ -74,3 +74,18 @@ SET RoomNumber = 9
 WHERE RoomId = 14
 SET RoomNumber = 10
 WHERE RoomId = 15
+
+UPDATE Animals
+SET SpeciesId = 1;
+
+UPDATE Animals
+SET EmployeeId = 1;
+
+UPDATE Animals
+SET DietPlanId = 1;
+
+UPDATE Animals
+SET Category = 'Pet';
+
+ALTER TABLE Employee
+	ADD cashRegister float;
