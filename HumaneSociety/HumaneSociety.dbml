@@ -41,8 +41,8 @@
       <Association Name="Animal_AnimalShot" Member="AnimalShots" ThisKey="AnimalId" OtherKey="AnimalId" Type="AnimalShot" />
       <Association Name="Animal_Room" Member="Rooms" ThisKey="AnimalId" OtherKey="AnimalId" Type="Room" />
       <Association Name="DietPlan_Animal" Member="DietPlan" ThisKey="DietPlanId" OtherKey="DietPlanId" Type="DietPlan" IsForeignKey="true" />
-      <Association Name="Employee_Animal" Member="Employee" ThisKey="EmployeeId" OtherKey="EmployeeId" Type="Employee" IsForeignKey="true" />
       <Association Name="Specy_Animal" Member="Specy" ThisKey="SpeciesId" OtherKey="SpeciesId" Type="Specy" IsForeignKey="true" />
+      <Association Name="Employee_Animal" Member="Employee" ThisKey="EmployeeId" OtherKey="EmployeeId" Type="Employee" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.AnimalShots" Member="AnimalShots">
@@ -79,25 +79,6 @@
       <Association Name="DietPlan_Animal" Member="Animals" ThisKey="DietPlanId" OtherKey="DietPlanId" Type="Animal" />
     </Type>
   </Table>
-  <Table Name="dbo.Employees" Member="Employees">
-    <Type Name="Employee">
-      <Column Name="EmployeeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="FirstName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="LastName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="UserName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="EmployeeNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="Employee_Animal" Member="Animals" ThisKey="EmployeeId" OtherKey="EmployeeId" Type="Animal" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Rooms" Member="Rooms">
-    <Type Name="Room">
-      <Column Name="RoomId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="AnimalId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Animal_Room" Member="Animal" ThisKey="AnimalId" OtherKey="AnimalId" Type="Animal" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Shots" Member="Shots">
     <Type Name="Shot">
       <Column Name="ShotId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -118,6 +99,27 @@
       <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Abbreviation" Type="System.String" DbType="VarChar(2)" CanBeNull="true" />
       <Association Name="USState_Address" Member="Addresses" ThisKey="USStateId" OtherKey="USStateId" Type="Address" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Rooms" Member="Rooms">
+    <Type Name="Room">
+      <Column Name="RoomId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AnimalId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RoomNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Animal_Room" Member="Animal" ThisKey="AnimalId" OtherKey="AnimalId" Type="Animal" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Employees" Member="Employees">
+    <Type Name="Employee">
+      <Column Name="EmployeeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EmployeeNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="cashRegister" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Association Name="Employee_Animal" Member="Animals" ThisKey="EmployeeId" OtherKey="EmployeeId" Type="Animal" />
     </Type>
   </Table>
 </Database>

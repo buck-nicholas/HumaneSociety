@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,23 +41,29 @@ namespace HumaneSociety
                 (from y in database.Adoptions
                  where y.AdoptionId == adoption.AdoptionId
                  select y).First();
+            var animal =
+                    (from z in database.Animals
+                     where z.AnimalId == adoption.AnimalId
+                     select z).First();
             if (x)
             {
                 requiredData.ApprovalStatus = "Approved";
+                animal.AdoptionStatus = "Approved";
             }
             else
             {
                 requiredData.ApprovalStatus = "Denied";
+                animal.AdoptionStatus = "Pending";
             }
+            database.SubmitChanges();
         }
         public static Animal GetAnimalByID(int iD)
         {
             var requiredData =
-                from x in database.Animals
-                where x.AnimalId == iD
-                select x;
-            requiredData.ToList();
-            return (Animal)requiredData;
+                (from x in database.Animals
+                 where x.AnimalId == iD
+                 select x).First();
+            return requiredData;
         }
         public static void RemoveAnimal(Animal animal)
         {
@@ -73,6 +80,26 @@ namespace HumaneSociety
         public static void AddAnimal(Animal animal)
         {
             database.Animals.InsertOnSubmit(animal);
+            database.SubmitChanges();
+            AssignRoom(animal);
+        }
+        public static void AssignRoom(Animal animal)
+        {
+            Room newRoom = new Room();
+            newRoom.AnimalId = animal.AnimalId;
+            int newNumber = 0;
+            bool searching = false;
+            while (!searching)
+            {
+                newNumber++;
+                var isExisting = database.Rooms.AsEnumerable().Any(row => newNumber == row.RoomNumber);
+                if (!isExisting)
+                {
+                    searching = true;
+                    newRoom.RoomNumber = newNumber;
+                }
+            }
+            database.Rooms.InsertOnSubmit(newRoom);
             database.SubmitChanges();
         }
         public static Species GetSpecies(string speciesName)
@@ -117,6 +144,8 @@ namespace HumaneSociety
             Adoption newAdd = new Adoption();
             newAdd.Client = client;
             newAdd.Animal = animal;
+            newAdd.ApprovalStatus = "Pending";
+            newAdd.AdoptionFee = 100;
             database.Adoptions.InsertOnSubmit(newAdd);
             database.SubmitChanges();
         }
@@ -142,10 +171,6 @@ namespace HumaneSociety
             newClient.UserName = username;
             newClient.Password = password;
             newClient.Email = email;
-            //newClient.Address.USStateId = state;
-            //newClient.Address.USState.USStateId = state;
-            //newClient.Address.Zipcode = zipCode;
-            //newClient.Address.AddressLine1 = streetAddress;
             Address newAddress = new Address();
             newAddress.AddressLine1 = streetAddress;
             newAddress.USStateId = state;
@@ -271,9 +296,13 @@ namespace HumaneSociety
         }
         public static void UpdateShot(string newShot, Animal animal) // unaccounted for error
         {
+            var requiredData =
+                (from x in database.Shots
+                 where x.Name == newShot
+                 select x).First();
             AnimalShot newAnimalShot = new AnimalShot();
             newAnimalShot.AnimalId = animal.AnimalId;
-            newAnimalShot.Shot.Name = newShot;
+            newAnimalShot.ShotId = requiredData.ShotId;
             database.AnimalShots.InsertOnSubmit(newAnimalShot);
             database.SubmitChanges();
         }
@@ -384,6 +413,7 @@ namespace HumaneSociety
             Console.WriteLine(requiredData.LastName);
             Console.WriteLine(requiredData.Email);
             Console.ReadLine();
+            
         }
         public static void UpdateEmployee(Employee employee)
         {
@@ -408,10 +438,27 @@ namespace HumaneSociety
         public static Room GetRoom(int animalID)
         {
             var requiredData =
-                from x in database.Rooms
+                (from x in database.Rooms
                 where animalID == x.Animal.AnimalId
-                select x;
-            return (Room)requiredData;
+                select x).First();
+            return requiredData;
+        }
+        public static void UpdateRoom(int ID, int newNumber)
+        {
+            var isExisting = database.Rooms.AsEnumerable().Any(row => newNumber == row.RoomNumber);
+            if (!isExisting)
+            {
+                var requiredData =
+                    (from x in database.Rooms
+                    where ID == x.AnimalId
+                    select x).First();
+                requiredData.RoomNumber = newNumber;
+                database.SubmitChanges();
+            }
+            else
+            {
+                Console.WriteLine("Room is already occupied");
+            }
         }
         public static void ImportCSVDataToDatabase(string[][] csvOutputData) // CSV Data to New Record
         {
@@ -430,19 +477,26 @@ namespace HumaneSociety
                 database.SubmitChanges();
             }
         }
-        public static double ChargeAdoptionFee(Adoption adoption)
+        public static void ChargeAdoptionFee(Adoption adoption, Employee employee)
         {
             if(adoption.AdoptionFee != null)
             {
                 int? payment = adoption.AdoptionFee;
                 double paymentConverted = Convert.ToDouble(payment);
                 adoption.PaymentCollected = true;
-                return paymentConverted;
+                if (employee.cashRegister == null)
+                {
+                    employee.cashRegister = paymentConverted;
+                }
+                else
+                {
+                    employee.cashRegister += paymentConverted;
+                }
+                database.SubmitChanges();
             }
             else
             {
                 adoption.PaymentCollected = true;
-                return 0;
             }
         }
     }

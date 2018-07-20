@@ -9,7 +9,6 @@ namespace HumaneSociety
     class UserEmployee : User
     {
         Employee employee;
-        double cashRegister = 0;
         
         public override void LogIn()
         {
@@ -27,7 +26,7 @@ namespace HumaneSociety
         }
         protected override void RunUserMenus()
         {
-            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption" };
+            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption", "5. Update Room" };
             UserInterface.DisplayUserOptions(options);
             string input = UserInterface.GetUserInput();
             RunUserInput(input);
@@ -50,6 +49,10 @@ namespace HumaneSociety
                     return;
                 case "4":
                     CheckAdoptions();
+                    RunUserMenus();
+                    return;
+                case "5":
+                    FindAnimal();
                     RunUserMenus();
                     return;
                 default:
@@ -88,7 +91,7 @@ namespace HumaneSociety
             if ((bool)UserInterface.GetBitData())
             {
                 Query.UpdateAdoption(true, adoption);
-                cashRegister += Query.ChargeAdoptionFee(adoption);
+                Query.ChargeAdoptionFee(adoption, employee);
             }
             else
             {
@@ -182,11 +185,37 @@ namespace HumaneSociety
             }
             
         }
-
+        private void UpdateRoom(int ID)
+        {
+            Console.Clear();
+            Console.WriteLine("Enter Room Number: ");
+            string userInput = Console.ReadLine();
+            int roomNumber = int.Parse(userInput);
+            Query.UpdateRoom(ID, roomNumber);
+        }
+        private void FindAnimal()
+        {
+            Console.Clear();
+            var animals = SearchForAnimal().ToList();
+            if (animals.Count > 1)
+            {
+                UserInterface.DisplayUserOptions("Several animals found");
+                UserInterface.DisplayAnimals(animals);
+                UserInterface.DisplayUserOptions("Enter the ID of the animal you would like to check");
+                int ID = UserInterface.GetIntegerData();
+                UpdateRoom(ID);
+                return;
+            }
+            if (animals.Count == 0)
+            {
+                UserInterface.DisplayUserOptions("Animal not found please use different search criteria");
+                return;
+            }
+        }
         private void UpdateAnimal(Animal animal)
         {
             Dictionary<int, string> updates = new Dictionary<int, string>();
-            List<string> options = new List<string>() { "Select Updates: (Enter number and choose finished when finished)", "1. Category", "2. Breed", "3. Name", "4. Age", "5. Demeanor", "6. Kid friendly", "7. Pet friendly", "8. Weight", "9. Finished" };
+            List<string> options = new List<string>() { "Select Updates: (Enter number and choose finished when finished)", "1. Species", "2. Species", "3. Name", "4. Age", "5. Demeanor", "6. Kid friendly", "7. Pet friendly", "8. Weight", "9. Finished"  };
             UserInterface.DisplayUserOptions(options);
             string input = UserInterface.GetUserInput();
             if(input.ToLower() == "9" ||input.ToLower() == "finished")
@@ -329,7 +358,6 @@ namespace HumaneSociety
             }
             else
             {
-                //employee.UserName = username;
                 Query.UpdateEmployeeUserName(employee, username);
                 UserInterface.DisplayUserOptions("Username successful");
             }
